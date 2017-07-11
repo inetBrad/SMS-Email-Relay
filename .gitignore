@@ -1,0 +1,17 @@
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Composer installed files
+/vendor/*
+composer.lock
+
+# Local files with sensitive information
+credentials.php
+contacts.csv
+*debug.php

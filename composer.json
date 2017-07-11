@@ -1,0 +1,8 @@
+{
+    "require": {
+        "giggsey/libphonenumber-for-php": "^8.4",
+        "mailgun/mailgun-php": "^2.3",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/message": "^1.6"
+    }
+}
