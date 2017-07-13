@@ -5,32 +5,50 @@ An SMS &lt;-> Email relay using [Bandwidth](https://www.bandwidth.com/) messagin
 ----------
 **Table of Contents**
 
-[TOC]
+- [SMS Email Relay Overview](#sms-email-relay-overview)
+- [Background](#background)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+  * [Instructions for Mailgun](#instructions-for-mailgun)
+    + [Add a new subdomain in Mailgun](#add-a-new-subdomain-in-mailgun)
+    + [Validate the domain](#validate-the-domain)
+    + [Setup a Route](#setup-a-route)
+  * [Instructions for Bandwidth](#instructions-for-bandwidth)
+    + [Allocate a phone number](#allocate-a-phone-number)
+    + [Create an Application](#create-an-application)
+    + [Add Phone Numbers](#add-phone-numbers)
+  * [Code deployment](#code-deployment)
+- [Usage](#usage)
+  * [Setup](#setup)
+  * [Send an SMS via email (**email -\> SMS**)](#send-an-sms-via-email----email-----sms---)
+  * [Receive email via SMS (**SMS-\>email**)](#receive-email-via-sms----sms---email---)
+- [Known Limitations](#known-limitations)
 
 ----------
 
 
-#Background
+# Background
 Sometimes we find ourselves in a business environment where email is still the primary form of communication. So how do you close the gap with peers that want to communicate via SMS?
 *Answer:* An SMS - Email Relay!
 
 This PHP app leverages Bandwidth's Messaging API and Mailgun's Email API to deliver a feature-rich gateway service.
-#Features
+# Features
  1. 2-way communications between an email address and phone number (1:1 mapping)
  2. Supports SMS
  3. Supports MMS (i.e. picture messaging)
  4. Works with Bandwidth Messaging (USA and Canada)
 
-#Requirements
+# Requirements
 You will need the following to successfully create your SMS / Email relay service:
 
  1. A developer account with [Bandwidth](https:://www.bandwidth.com)
  2. A developer account with [Mailgun](https://www.mailgun.com)
  3. A DNS domain (or sub-domain) that you control and can setup custom records for domain verification
  4. A web server with PHP 5.6 or higher
-#Installation
+# Installation
 Special note: Your web server must be reachable from the public Internet so Bandwidth and Mailgun can signal to you when an inbound event occurs.
-##Instructions for Mailgun
+## Instructions for Mailgun
 You will need to delegate MX records for a domain that will act as your email relay. Since you likely want to use a domain for normal business email through your existing provider, the best course of action is to create a sub domain. We'll use `sms.mydomain.com` for this example.
 
 Mailgun offers a great overview of how to get started. For the impatient, you will need to:
@@ -39,20 +57,20 @@ Mailgun offers a great overview of how to get started. For the impatient, you wi
  - Validate the domain
  - Setup a route so that Mailgun knows how to tell your app a new email has arrived
  - Make note of your API keys. You'll need them for a later step.
-###Add a new subdomain in Mailgun
+### Add a new subdomain in Mailgun
 In this example, we are adding `sms.mydomain.com`
 ![domain setup](https://www.dropbox.com/s/b1m7ky29oxpl8r8/mailgun-newdomain.png?dl=1)
-###Validate the domain
+### Validate the domain
 Mailgun will give you comphrensive instructions on how to validate your domain. You must complete this step if you want a fully-functional SMS/Email relay.
 ![domain validation](https://www.dropbox.com/s/sn8zqws9wlvljam/mailgun-domainsetp.png?dl=1)
-###Setup a Route
+### Setup a Route
 This is the last step needed with completing your Mailgun account. We are asking Mailgun to hold our email and notify our App for each new email. Be sure to:
 
  - Create a "Catch All" route
  - Select "Store and Notify" and add a URL where Mailgun can reach your code (see [Code Deployment](#code-deployment)). You'll want a URL that points to the `email_to_sms.php` code
  - Add a description (optional)
 ![mail route](https://www.dropbox.com/s/5ixmitjh8ggvw5n/mailgin-route.png?dl=1)
-##Instructions for Bandwidth
+## Instructions for Bandwidth
 The summary steps are:
 
  - Create an account (if you do not already have one). Direct link is: [https://catapult.inetwork.com/portal/signup](https://catapult.inetwork.com/portal/signup)
@@ -60,19 +78,19 @@ The summary steps are:
  - Create an Application
  - Add phone numbers to the Application
  - Make note of your API keys for a later step
-###Allocate a phone number
+### Allocate a phone number
 You will need at least one phone number.
 ![Grab a phone number](https://www.dropbox.com/s/f8udovw9y89ke0m/bandwidth-number.png?dl=1)
-###Create an Application
+### Create an Application
 Give your App a name. Be sure to enter a URL that is reachable from the Internet. You'll want a URL that points to the `sms_to_email.php` code. See [Code Deployment](#code-deployment) for more details. In this case, we are using https://mydomain.com/smsEmailRelay/sms_to_email.php
 
 ![Create an Application](https://www.dropbox.com/s/5tacbvbyqpzliv9/bandwidth-appcreate.png?dl=1)
-###Add Phone Numbers
+### Add Phone Numbers
 The last step is to associate a phone number with your application. You will need at least one phone number, but feel to add as many as you need.
 ![Add Phone Numbers To App](https://www.dropbox.com/s/c2rnz9ck7pwaevu/bandwidth-appaddnumber.png?dl=1)
 
 ![Select Phone Numbers to be added](https://www.dropbox.com/s/6ftonld2fbh8tvm/bandwidth-appselectnumber.png?dl=1)
-##Code deployment
+## Code deployment
 Now that you've got Bandwidth and Mailgun configured, it's time to get the code installed. On your web server, create a directory at the document root for the sms/email relay service. We'll assume you are on a Unix-based system here:
 ```
 bash$ mkdir smsEmailRelay
@@ -99,9 +117,9 @@ Create `credentials.php` or edit the `define` statements in `email_to_sms.php` a
     define('DOMAIN',				'sms.mydomain.com');
     ?>
 The Bandwidth API Token, Bandwidth API Secret, and Mailgun Key are all available from the respective developer portals.
-#Usage
+# Usage
 Assuming you have followed the Quick Start guide for this app, you can immediately begin relaying SMS via email.
-##Setup 
+## Setup 
 In the directory where you installed the PHP app, create a .CSV (comma delimited file) called `contacts.csv`. This file controls your mapping between email addresses and phone numbers. This file must contain:
 e164 formated phone number, email address. Example:
 ```
@@ -109,7 +127,7 @@ e164 formated phone number, email address. Example:
 +15554441235,sales@mydomain.com
 ```
 Any phone number appearing in your .CSV list **MUST** already be allocated in your Bandwidth developer account.
-##Send an SMS via email (**email -\> SMS**)
+## Send an SMS via email (**email -\> SMS**)
 Create an email with the following parameters:
 
     From: < Valid email listed in your contacts.csv \>
@@ -129,7 +147,7 @@ No special actions are needed. Simply send an SMS to a number that you've alloca
 A sender's cell phone might look like:
 ![Mobile Phone](https://www.dropbox.com/s/iuqaq4rdcjp7mlo/screenshot-mobile.png?dl=1)
 
-#Known Limitations
+# Known Limitations
 
  - **This code has limited error handling.** If something goes wrong, check your web server's error logs. At a minimum, the code will throw an error if it is unable to find a valid email/phone number combination.
  - **BACTV not supported.** If your email server pads the sender envelope with something that looks like `prvs=tag-value=mailbox@example.com`, the App will treat this as an unknown sender and drop the email. This will be fixed in a future update.
