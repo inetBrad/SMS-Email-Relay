@@ -1,4 +1,11 @@
 {
+    "homepage": "https://github.com/inetBrad/SMS-Email-Relay",
+    "license": "MIT",
+    "authors": [
+    	{
+            "name": "Brad Roldan"
+        }
+    ],
     "require": {
         "giggsey/libphonenumber-for-php": "^8.4",
         "mailgun/mailgun-php": "^2.3",
