@@ -86,7 +86,7 @@ Give your App a name. Be sure to enter a URL that is reachable from the Internet
 
 ![Create an Application](https://www.dropbox.com/s/5tacbvbyqpzliv9/bandwidth-appcreate.png?dl=1)
 ### Add Phone Numbers
-The last step is to associate a phone number with your application. You will need at least one phone number, but feel to add as many as you need.
+The last step is to associate a phone number with your application. You will need at least one phone number, but feel free to add as many as you need.
 ![Add Phone Numbers To App](https://www.dropbox.com/s/c2rnz9ck7pwaevu/bandwidth-appaddnumber.png?dl=1)
 
 ![Select Phone Numbers to be added](https://www.dropbox.com/s/6ftonld2fbh8tvm/bandwidth-appselectnumber.png?dl=1)
@@ -150,7 +150,7 @@ A sender's cell phone might look like:
 # Known Limitations
 
  - **This code has limited error handling.** If something goes wrong, check your web server's error logs. At a minimum, the code will throw an error if it is unable to find a valid email/phone number combination.
- - **BACTV not supported.** If your email server pads the sender envelope with something that looks like `prvs=tag-value=mailbox@example.com`, the App will treat this as an unknown sender and drop the email. This will be fixed in a future update.
+ - **BATV not supported.** If your email server pads the sender envelope with something that looks like `prvs=tag-value=mailbox@example.com`, the App will treat this as an unknown sender and drop the email. This will be fixed in a future update.
  - **The maximum SMS message length is 1000 characters.** Technically speaking, a single SMS is 160 Unicode characters. However, messages longer than 160 characters are automatically broken into a multi-part
    SMS and re-assembled by the far-end.
  - **The cumulative maximum size of attachments is 5MB.** Not all carriers can accept MMS with media that large, so be safe and keep your attachments below 1MB.
