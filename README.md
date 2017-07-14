@@ -150,7 +150,6 @@ A sender's cell phone might look like:
 # Known Limitations
 
  - **This code has limited error handling.** If something goes wrong, check your web server's error logs. At a minimum, the code will throw an error if it is unable to find a valid email/phone number combination.
- - **BATV not supported.** If your email server pads the sender envelope with something that looks like `prvs=tag-value=mailbox@example.com`, the App will treat this as an unknown sender and drop the email. This will be fixed in a future update.
  - **The maximum SMS message length is 1000 characters.** Technically speaking, a single SMS is 160 Unicode characters. However, messages longer than 160 characters are automatically broken into a multi-part
    SMS and re-assembled by the far-end.
  - **The cumulative maximum size of attachments is 5MB.** Not all carriers can accept MMS with media that large, so be safe and keep your attachments below 1MB.
