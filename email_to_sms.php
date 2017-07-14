@@ -19,7 +19,9 @@
 // A better implementation would be to store that information in a database
 
 require __DIR__ . '/vendor/autoload.php';
-require_once('credentials.php');
+if (file_exists('./credentials.php')) {
+    require_once('./credentials.php');
+}
 
 /************************************************************************/
 // Credentials
@@ -69,7 +71,8 @@ date_default_timezone_set ('UTC');
 if (!empty($_POST["subject"])) {
 
     // extract phone number that we are sending SMS to.
-    preg_match('/\+?[0-9]+/', $_POST["subject"], $smsTo);
+    preg_match('/\+?1?-? *\.?\(?\d{3}\)?-?\.? *\d{3}-? *\.?\d{4}/', 
+            $_POST["subject"], $smsTo);
     // format the to number into e.164
     $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
     $smsToE164 = $phoneUtil->format($phoneUtil->parse($smsTo[0], "US"),
@@ -87,7 +90,7 @@ if (!empty($_POST["subject"])) {
     if (!isset($smsMapping[$smsFromE164])) {
         error_log ("Not a valid from number: " . $smsFromE164);
         die();
-    } elseif ($smsMapping[$smsFromE164] != $_POST["sender"]) {
+    } elseif ($smsMapping[$smsFromE164] != sanitizeEmailAddress($_POST["sender"])) {
         error_log ("Not a valid sender: " . $_POST["sender"]);
         die();
     }
@@ -258,5 +261,19 @@ function downloadMedia($mailgunMedia) {
     curl_exec($ch);
     curl_close($ch);
     fclose($fp);
+}
+function sanitizeEmailAddress($emailString) {
+/* Takes an email address and strips extranous information.
+*  Currently strips:
+*   - Strips BATV fields, if present. See https://en.wikipedia.org/wiki/Bounce_Address_Tag_Validation
+*
+* @param string $emailString - the raw "sender" string passed from Mailgun
+*
+* @return string $result - Sanitized email address
+*/    
+    preg_match('/(?:prvs=\S*=)?([a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$)/', $emailString, $result);
+    
+    // The pattern match will contain the email address in Group 1
+    return $result[1];
 }
 ?>
