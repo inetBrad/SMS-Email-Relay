@@ -222,7 +222,7 @@ function getMedia($attachmentList) {
         // We are only accepting attachments less than 5MB here
         // ToDo: throw error if aggregate of all attachments > 5MB
         if (in_array($mediaDetails->{'content-type'}, $allowedMedia) 
-                && $mediaDetails['size'] < 5120000) {
+                && $mediaDetails->{'size'} < 5120000) {
         
             downloadMedia($mediaDetails);
 
